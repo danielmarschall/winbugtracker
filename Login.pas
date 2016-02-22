@@ -48,10 +48,15 @@ begin
     ShowMessage('Bitte Projekt ausw‰hlen.');
     cbxProjekt.SetFocus;
     Exit;
-  end;
+  end;                                                 
   frmBugtracker.eingeloggtMitarbeiter := cbxMitarbeiter.KeyValue;
+  frmBugtracker.eingeloggtMitarbeiterName := cbxMitarbeiter.Text;
   frmBugtracker.aktuellesProjekt := cbxProjekt.KeyValue;
+  frmBugtracker.aktuellesProjektName := cbxProjekt.Text;
+
+  frmBugtracker.LblAngemeldet.Caption := Format('Eingeloggt: %s, Projekt: %s', [frmBugtracker.eingeloggtMitarbeiterName, frmBugtracker.aktuellesProjektName]);
   frmBugtracker.NeuFiltern;
+
   ModalResult := mrOk; // Das schlieﬂt den Dialog
 end;
 

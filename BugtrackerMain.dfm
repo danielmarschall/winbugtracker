@@ -150,6 +150,28 @@ object frmBugtracker: TfrmBugtracker
       Height = 13
       Caption = 'Ver'#246'ffentlicht als Version'
     end
+    object LblAngemeldet: TLabel
+      Left = 3
+      Top = 0
+      Width = 83
+      Height = 13
+      Caption = 'Nicht angemeldet'
+    end
+    object Label7: TLabel
+      Left = 250
+      Top = 0
+      Width = 46
+      Height = 13
+      Caption = 'Unwichtig'
+    end
+    object Label8: TLabel
+      Left = 366
+      Top = 0
+      Width = 34
+      Height = 13
+      Alignment = taRightJustify
+      Caption = 'Kritisch'
+    end
     object DBNavigator1: TDBNavigator
       Left = 15
       Top = 16
@@ -242,7 +264,7 @@ object frmBugtracker: TfrmBugtracker
     end
     object TrackBar1: TTrackBar
       Left = 245
-      Top = 8
+      Top = 12
       Width = 164
       Height = 45
       Position = 5
@@ -263,8 +285,9 @@ object frmBugtracker: TfrmBugtracker
       Top = 208
       Width = 185
       Height = 25
-      Caption = 'Bearbeitungsnotiz hinzuf'#252'gen'
+      Caption = 'Notiz hinzuf'#252'gen'
       TabOrder = 7
+      OnClick = btnBearbeitungsnotizClick
     end
   end
   object ADOConnection1: TADOConnection

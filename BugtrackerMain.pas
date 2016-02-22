@@ -2,13 +2,19 @@ unit BugtrackerMain;
 
 (*
  * TODO:
- * - fertigstellen
- *   ... bearbeitungsnotiz-button (rtf-farben usw)
- *   ...
  * - abfragen ob speichern wenn fenster geschlossen wird
- * - filtern nach modul
+ * - Spezielle Filter
+ *   ... Auflisten nach Modul
+ *   ... Anzeigen der Agenda
  * - verbinden mit ticketsystem von HS
  * - rtf controls?
+ * - Neue Felder:
+ *   ... Erfasser
+ *   ... Agenda
+ *   ... Status = Offen, gefixt, Abgelehnt, Veröffentlicht
+ *   ... RTF Feld als BIGTEXT definieren
+ * - Neue Aufteilung der States
+ *   ... Open, Fixed, Published, Wontfix/Rejected, Planned(Agenda)
  *)
 
 interface
@@ -75,6 +81,9 @@ type
     qryBugsprojekt: TIntegerField;
     qryVersionen: TADOQuery;
     qryModule: TADOQuery;
+    LblAngemeldet: TLabel;
+    Label7: TLabel;
+    Label8: TLabel;
     procedure Mitarbeiter1Click(Sender: TObject);
     procedure qryBugsAfterScroll(DataSet: TDataSet);
     procedure Module1Click(Sender: TObject);
@@ -91,13 +100,14 @@ type
     procedure FormCreate(Sender: TObject);
     procedure qryVersionenAfterInsert(DataSet: TDataSet);
     procedure qryModuleAfterInsert(DataSet: TDataSet);
-  private
-    { Private-Deklarationen }
+    procedure btnBearbeitungsnotizClick(Sender: TObject);
   public
-    { Public-Deklarationen }
     eingeloggtMitarbeiter: integer;
+    eingeloggtMitarbeiterName: string;
     aktuellesProjekt: integer;
+    aktuellesProjektName: string;
     procedure NeuFiltern;
+    procedure NotizHinzufuegen(color: TColor; bez: string);
   end;
 
 var
@@ -172,13 +182,24 @@ begin
   AboutBox.ShowModal;
 end;
 
+procedure TfrmBugtracker.btnBearbeitungsnotizClick(Sender: TObject);
+begin
+  NotizHinzufuegen(clRed, 'Notiz');
+end;
+
 procedure TfrmBugtracker.btnFixedToggleClick(Sender: TObject);
 begin
   if not (qryBugs.State in [dsEdit, dsInsert]) then qryBugs.Edit;
   if qryBugs.FieldByName('fixdatum').IsNull then
-    qryBugs.FieldByName('fixdatum').AsDateTime := Now
+  begin
+    qryBugs.FieldByName('fixdatum').AsDateTime := Now;
+    NotizHinzufuegen(clGreen, 'Gefixt');
+  end
   else
+  begin
     qryBugs.FieldByName('fixdatum').Clear;
+    NotizHinzufuegen(clBlue, 'Neu eröffnet');
+  end;
 end;
 
 procedure TfrmBugtracker.ComboBox1Change(Sender: TObject);
@@ -251,6 +272,47 @@ begin
 
   qryVersionen.SQL.Text := 'SELECT * FROM versionen WHERE projekt = ' + IntToStr(aktuellesProjekt);
   qryVersionen.Active := true;
+end;
+
+procedure TfrmBugtracker.NotizHinzufuegen(color: TColor; bez: string);
+var
+  leerzeilen: integer;
+  umbruch: string;
+  prefix: string;
+begin
+  if not (qryBugs.State in [dsEdit, dsInsert]) then qryBugs.Edit;
+
+  // Endet der Text mit zwei Zeilenabständen? Wenn nein, dann einfügen.
+  leerzeilen := 0;
+  if Copy(DBRichEdit1.Text, 1+Length(DBRichEdit1.Text)-2, 2) = #13#10 then Inc(leerzeilen); // letzte Zeile
+  if Copy(DBRichEdit1.Text, 1+Length(DBRichEdit1.Text)-4, 2) = #13#10 then Inc(leerzeilen); // Vorletzte Zeile
+  case leerzeilen of
+    0: umbruch := #13#10#13#10;
+    1: umbruch := #13#10;
+    2: umbruch := '';
+  end;
+
+  DBRichEdit1.SelStart := DBRichEdit1.GetTextLen;
+  DBRichEdit1.SelText := umbruch;
+
+  DBRichEdit1.SelAttributes.Size := 13;
+  DBRichEdit1.SelAttributes.Color := color;
+  DBRichEdit1.SelAttributes.Style := [fsUnderline];
+  if Trim(bez) <> '' then
+    prefix := Trim(bez) + ' - '
+  else
+    prefix := '';
+  DBRichEdit1.SelText := prefix + eingeloggtMitarbeiterName + ' ' + FormatDateTime('dd.mm.yyyy hh:nn', Now); // DateTimeToStr(Now);
+
+  DBRichEdit1.SelAttributes.Size := 10;
+  DBRichEdit1.SelAttributes.Color := clWindowText;
+  DBRichEdit1.SelAttributes.Style := [];
+  DBRichEdit1.SelText := #13#10 {+ '<Hier Text eingeben>'};
+
+  // Ans Ende scrollen
+  DBRichEdit1.SetFocus;
+  DBRichEdit1.SelStart := DBRichEdit1.GetTextLen;
+  DBRichEdit1.Perform(EM_SCROLLCARET, 0, 0);
 end;
 
 procedure TfrmBugtracker.Projekte1Click(Sender: TObject);

@@ -104,6 +104,7 @@ object frmLogin: TfrmLogin
     Width = 115
     Height = 36
     Caption = 'Los geht'#39's'
+    Default = True
     TabOrder = 2
     OnClick = Button1Click
   end
