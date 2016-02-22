@@ -21,7 +21,7 @@ object frmMitarbeiter: TfrmMitarbeiter
     Top = 8
     Width = 257
     Height = 233
-    DataSource = Form1.dsMitarbeiter
+    DataSource = frmBugtracker.dsMitarbeiter
     TabOrder = 0
     TitleFont.Charset = DEFAULT_CHARSET
     TitleFont.Color = clWindowText

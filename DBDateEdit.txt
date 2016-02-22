@@ -1,0 +1,14 @@
+
+procedure TForm1.qryBugsAfterScroll(DataSet: TDataSet);
+begin
+  DateTimePicker1.DateTime := qryBugs.FieldByName('fixdatum').AsDateTime;
+end;
+
+procedure TForm1.DateTimePicker1CloseUp(Sender: TObject);
+begin
+  LockWindowUpdate(DBGrid1.Handle);
+  if not (qryBugs.State in [dsEdit, dsInsert]) then qryBugs.Edit;
+  qryBugs.FieldByName('fixdatum').AsDateTime := DateTimePicker1.DateTime;
+  LockWindowUpdate(0);
+end;
+

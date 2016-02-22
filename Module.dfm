@@ -21,7 +21,7 @@ object frmModule: TfrmModule
     Top = 8
     Width = 257
     Height = 233
-    DataSource = Form1.dsModule
+    DataSource = frmBugtracker.dsModule
     TabOrder = 0
     TitleFont.Charset = DEFAULT_CHARSET
     TitleFont.Color = clWindowText

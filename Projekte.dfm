@@ -21,7 +21,7 @@ object frmProjekte: TfrmProjekte
     Top = 8
     Width = 257
     Height = 233
-    DataSource = Form1.dsProjekte
+    DataSource = frmBugtracker.dsProjekte
     TabOrder = 0
     TitleFont.Charset = DEFAULT_CHARSET
     TitleFont.Color = clWindowText

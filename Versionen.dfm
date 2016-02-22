@@ -21,7 +21,7 @@ object frmVersionen: TfrmVersionen
     Top = 8
     Width = 257
     Height = 233
-    DataSource = Form1.dsVersionen
+    DataSource = frmBugtracker.dsVersionen
     TabOrder = 0
     TitleFont.Charset = DEFAULT_CHARSET
     TitleFont.Color = clWindowText
