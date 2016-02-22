@@ -1,9 +1,8 @@
-unit WuLiMain;
+unit BugtrackerMain;
 
 (*
  * TODO:
  * - fertigstellen
- *   ... multi user/projekt testen
  *   ... bearbeitungsnotiz-button (rtf-farben usw)
  *   ...
  * - abfragen ob speichern wenn fenster geschlossen wird
@@ -54,11 +53,9 @@ type
     Projektwechseln1: TMenuItem;
     XPManifest1: TXPManifest;
     qryBugs: TADOQuery;
-    tblVersionen: TADOTable;
     dsVersionen: TDataSource;
     tblProjekte: TADOTable;
     dsProjekte: TDataSource;
-    tblModule: TADOTable;
     dsModule: TDataSource;
     Timer1: TTimer;
     Splitter1: TSplitter;
@@ -76,6 +73,8 @@ type
     qryBugsversion_release: TIntegerField;
     qryBugsmodul: TIntegerField;
     qryBugsprojekt: TIntegerField;
+    qryVersionen: TADOQuery;
+    qryModule: TADOQuery;
     procedure Mitarbeiter1Click(Sender: TObject);
     procedure qryBugsAfterScroll(DataSet: TDataSet);
     procedure Module1Click(Sender: TObject);
@@ -90,6 +89,8 @@ type
     procedure btnFixedToggleClick(Sender: TObject);
     procedure qryBugsversion_releaseValidate(Sender: TField);
     procedure FormCreate(Sender: TObject);
+    procedure qryVersionenAfterInsert(DataSet: TDataSet);
+    procedure qryModuleAfterInsert(DataSet: TDataSet);
   private
     { Private-Deklarationen }
   public
@@ -135,6 +136,18 @@ begin
   begin
     raise Exception.Create('Vor einer Veröffentlichung muss der Bugfix erst als gefixt markiert werden.');
   end;
+end;
+
+procedure TfrmBugtracker.qryModuleAfterInsert(DataSet: TDataSet);
+begin
+  // Standardwerte für ein neues Modul
+  qryModule.FieldByName('projekt').AsInteger := aktuellesProjekt;
+end;
+
+procedure TfrmBugtracker.qryVersionenAfterInsert(DataSet: TDataSet);
+begin
+  // Standardwerte für eine neue Version
+  qryVersionen.FieldByName('projekt').AsInteger := aktuellesProjekt;
 end;
 
 procedure TfrmBugtracker.Timer1Timer(Sender: TObject);
@@ -214,9 +227,9 @@ begin
   ADOConnection1.Connected := true;
   qryBugs.Active := true;
   tblMitarbeiter.Active := true;
-  tblVersionen.Active := true;
+  qryVersionen.Active := true;
   tblProjekte.Active := true;
-  tblModule.Active := true;
+  qryModule.Active := true;
 end;
 
 procedure TfrmBugtracker.Mitarbeiter1Click(Sender: TObject);
@@ -232,6 +245,12 @@ end;
 procedure TfrmBugtracker.NeuFiltern;
 begin
   ComboBox1Change(ComboBox1);
+
+  qryModule.SQL.Text := 'SELECT * FROM module WHERE projekt = ' + IntToStr(aktuellesProjekt);
+  qryModule.Active := true;
+
+  qryVersionen.SQL.Text := 'SELECT * FROM versionen WHERE projekt = ' + IntToStr(aktuellesProjekt);
+  qryVersionen.Active := true;
 end;
 
 procedure TfrmBugtracker.Projekte1Click(Sender: TObject);

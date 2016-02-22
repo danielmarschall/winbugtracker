@@ -31,8 +31,6 @@ object frmBugtracker: TfrmBugtracker
     Height = 498
     Align = alLeft
     TabOrder = 0
-    ExplicitLeft = 256
-    ExplicitTop = 448
     DesignSize = (
       249
       498)
@@ -107,9 +105,6 @@ object frmBugtracker: TfrmBugtracker
     Height = 498
     Align = alClient
     TabOrder = 1
-    ExplicitLeft = 320
-    ExplicitTop = 8
-    ExplicitWidth = 441
     DesignSize = (
       499
       498)
@@ -383,16 +378,8 @@ object frmBugtracker: TfrmBugtracker
       FieldName = 'projekt'
     end
   end
-  object tblVersionen: TADOTable
-    Active = True
-    Connection = ADOConnection1
-    CursorType = ctStatic
-    TableName = 'versionen'
-    Left = 240
-    Top = 344
-  end
   object dsVersionen: TDataSource
-    DataSet = tblVersionen
+    DataSet = qryVersionen
     Left = 240
     Top = 312
   end
@@ -409,16 +396,8 @@ object frmBugtracker: TfrmBugtracker
     Left = 272
     Top = 312
   end
-  object tblModule: TADOTable
-    Active = True
-    Connection = ADOConnection1
-    CursorType = ctStatic
-    TableName = 'module'
-    Left = 304
-    Top = 344
-  end
   object dsModule: TDataSource
-    DataSet = tblModule
+    DataSet = qryModule
     Left = 304
     Top = 312
   end
@@ -426,5 +405,27 @@ object frmBugtracker: TfrmBugtracker
     OnTimer = Timer1Timer
     Left = 128
     Top = 216
+  end
+  object qryVersionen: TADOQuery
+    Active = True
+    Connection = ADOConnection1
+    CursorType = ctStatic
+    AfterInsert = qryVersionenAfterInsert
+    Parameters = <>
+    SQL.Strings = (
+      'SELECT * FROM versionen')
+    Left = 240
+    Top = 344
+  end
+  object qryModule: TADOQuery
+    Active = True
+    Connection = ADOConnection1
+    CursorType = ctStatic
+    AfterInsert = qryModuleAfterInsert
+    Parameters = <>
+    SQL.Strings = (
+      'SELECT * FROM module')
+    Left = 304
+    Top = 344
   end
 end

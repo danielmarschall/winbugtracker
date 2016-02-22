@@ -23,6 +23,6 @@ implementation
 {$R *.dfm}
 
 uses
-  WuLiMain;
+  BugtrackerMain;
 
 end.

@@ -1,14 +1,14 @@
-program WuLi;
+program Bugtracker;
 
 uses
   Forms,
-  WuLiMain in 'WuLiMain.pas' {frmBugtracker},
+  BugtrackerMain in 'BugtrackerMain.pas' {frmBugtracker},
   Mitarbeiter in 'Mitarbeiter.pas' {frmMitarbeiter},
   Versionen in 'Versionen.pas' {frmVersionen},
   Module in 'Module.pas' {frmModule},
   Projekte in 'Projekte.pas' {frmProjekte},
   Login in 'Login.pas' {frmLogin},
-  ABOUT in 'About.pas' {AboutBox};
+  About in 'About.pas' {AboutBox};
 
 {$R *.res}
 

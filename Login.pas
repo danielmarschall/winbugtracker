@@ -31,7 +31,7 @@ var
 implementation
 
 uses
-  WuLiMain, Mitarbeiter, Projekte;
+  BugtrackerMain, Mitarbeiter, Projekte;
 
 {$R *.dfm}
 
