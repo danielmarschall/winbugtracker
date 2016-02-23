@@ -4,7 +4,7 @@ object frmVersionen: TfrmVersionen
   BorderIcons = [biSystemMenu]
   BorderStyle = bsDialog
   Caption = 'Versionen'
-  ClientHeight = 250
+  ClientHeight = 280
   ClientWidth = 273
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -34,5 +34,14 @@ object frmVersionen: TfrmVersionen
         FieldName = 'version'
         Visible = True
       end>
+  end
+  object DBNavigator1: TDBNavigator
+    Left = 8
+    Top = 247
+    Width = 256
+    Height = 25
+    DataSource = frmBugtracker.dsVersionen
+    VisibleButtons = [nbFirst, nbPrior, nbNext, nbLast, nbInsert, nbDelete, nbPost, nbCancel]
+    TabOrder = 1
   end
 end

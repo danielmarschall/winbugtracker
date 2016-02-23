@@ -2,8 +2,8 @@ object frmBugtracker: TfrmBugtracker
   Left = 0
   Top = 0
   Caption = 'ViaThinkSoft Bugtracker f'#252'r Windows'
-  ClientHeight = 498
-  ClientWidth = 751
+  ClientHeight = 596
+  ClientWidth = 763
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,7 +19,7 @@ object frmBugtracker: TfrmBugtracker
   object Splitter1: TSplitter
     Left = 249
     Top = 0
-    Height = 498
+    Height = 596
     ExplicitLeft = 0
     ExplicitTop = 136
     ExplicitHeight = 100
@@ -28,17 +28,18 @@ object frmBugtracker: TfrmBugtracker
     Left = 0
     Top = 0
     Width = 249
-    Height = 498
+    Height = 596
     Align = alLeft
     TabOrder = 0
+    ExplicitHeight = 498
     DesignSize = (
       249
-      498)
+      596)
     object DBGrid1: TDBGrid
       Left = 8
       Top = 35
       Width = 233
-      Height = 406
+      Height = 504
       Anchors = [akLeft, akTop, akRight, akBottom]
       DataSource = dsBugs
       ReadOnly = True
@@ -89,35 +90,38 @@ object frmBugtracker: TfrmBugtracker
     end
     object DBNavigator2: TDBNavigator
       Left = 11
-      Top = 456
+      Top = 554
       Width = 232
       Height = 25
       DataSource = dsBugs
       VisibleButtons = [nbFirst, nbPrior, nbNext, nbLast]
       Anchors = [akLeft, akRight, akBottom]
       TabOrder = 2
+      ExplicitTop = 456
     end
   end
   object Panel2: TPanel
     Left = 252
     Top = 0
-    Width = 499
-    Height = 498
+    Width = 511
+    Height = 596
     Align = alClient
     TabOrder = 1
+    ExplicitWidth = 499
+    ExplicitHeight = 498
     DesignSize = (
-      499
-      498)
+      511
+      596)
     object Label1: TLabel
-      Left = 15
-      Top = 53
+      Left = 16
+      Top = 101
       Width = 50
       Height = 13
       Caption = 'Bearbeiter'
     end
     object Label2: TLabel
       Left = 15
-      Top = 149
+      Top = 195
       Width = 20
       Height = 13
       Caption = 'Titel'
@@ -137,8 +141,8 @@ object frmBugtracker: TfrmBugtracker
       Caption = 'Gefixt'
     end
     object Label5: TLabel
-      Left = 15
-      Top = 101
+      Left = 16
+      Top = 149
       Width = 28
       Height = 13
       Caption = 'Modul'
@@ -172,6 +176,20 @@ object frmBugtracker: TfrmBugtracker
       Alignment = taRightJustify
       Caption = 'Kritisch'
     end
+    object Label9: TLabel
+      Left = 240
+      Top = 195
+      Width = 96
+      Height = 13
+      Caption = 'Geplant f'#252'r Version:'
+    end
+    object Label10: TLabel
+      Left = 17
+      Top = 53
+      Width = 40
+      Height = 13
+      Caption = 'Erfasser'
+    end
     object DBNavigator1: TDBNavigator
       Left = 15
       Top = 16
@@ -183,17 +201,18 @@ object frmBugtracker: TfrmBugtracker
     end
     object DBRichEdit1: TDBRichEdit
       Left = 15
-      Top = 248
-      Width = 471
-      Height = 233
+      Top = 280
+      Width = 483
+      Height = 299
       Anchors = [akLeft, akTop, akRight, akBottom]
       DataField = 'beschreibung'
       DataSource = dsBugs
       TabOrder = 9
+      ExplicitWidth = 736
     end
     object DBEdit1: TDBEdit
       Left = 15
-      Top = 168
+      Top = 208
       Width = 186
       Height = 21
       DataField = 'titel'
@@ -201,8 +220,8 @@ object frmBugtracker: TfrmBugtracker
       TabOrder = 5
     end
     object DBLookupComboBox1: TDBLookupComboBox
-      Left = 15
-      Top = 72
+      Left = 16
+      Top = 120
       Width = 186
       Height = 21
       DataField = 'bearbeiter'
@@ -239,7 +258,7 @@ object frmBugtracker: TfrmBugtracker
     end
     object DBLookupComboBox2: TDBLookupComboBox
       Left = 15
-      Top = 120
+      Top = 168
       Width = 186
       Height = 21
       DataField = 'modul'
@@ -281,21 +300,49 @@ object frmBugtracker: TfrmBugtracker
       OnClick = btnFixedToggleClick
     end
     object btnBearbeitungsnotiz: TButton
-      Left = 16
-      Top = 208
+      Left = 17
+      Top = 240
       Width = 185
       Height = 25
       Caption = 'Notiz hinzuf'#252'gen'
       TabOrder = 7
       OnClick = btnBearbeitungsnotizClick
     end
+    object DBLookupComboBox4: TDBLookupComboBox
+      Left = 240
+      Top = 208
+      Width = 155
+      Height = 21
+      DataField = 'version_agenda'
+      DataSource = dsBugs
+      KeyField = 'id'
+      ListField = 'version'
+      ListSource = dsVersionen
+      TabOrder = 11
+    end
+    object cbxErfasser: TDBLookupComboBox
+      Left = 17
+      Top = 72
+      Width = 186
+      Height = 21
+      Color = clBtnFace
+      DataField = 'erfasser'
+      DataSource = dsBugs
+      KeyField = 'id'
+      ListField = 'name'
+      ListSource = dsMitarbeiter
+      NullValueKey = 46
+      ReadOnly = True
+      TabOrder = 12
+    end
   end
   object ADOConnection1: TADOConnection
     Connected = True
     ConnectionString = 
-      'Provider=MSDASQL.1;Persist Security Info=False;Data Source=MySQL' +
-      ' RAS;Initial Catalog=bugtracker'
+      'Provider=SQLOLEDB.1;Integrated Security=SSPI;Persist Security In' +
+      'fo=False;Initial Catalog=WULI;Data Source=GREINER\CORA2012,49001'
     LoginPrompt = False
+    Provider = 'SQLOLEDB.1'
     Left = 104
     Top = 344
   end
@@ -399,6 +446,12 @@ object frmBugtracker: TfrmBugtracker
     end
     object qryBugsprojekt: TIntegerField
       FieldName = 'projekt'
+    end
+    object qryBugserfasser: TIntegerField
+      FieldName = 'erfasser'
+    end
+    object qryBugsversion_agenda: TIntegerField
+      FieldName = 'version_agenda'
     end
   end
   object dsVersionen: TDataSource

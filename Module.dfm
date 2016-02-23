@@ -4,7 +4,7 @@ object frmModule: TfrmModule
   BorderIcons = [biSystemMenu]
   BorderStyle = bsDialog
   Caption = 'Module'
-  ClientHeight = 250
+  ClientHeight = 280
   ClientWidth = 273
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -34,5 +34,14 @@ object frmModule: TfrmModule
         FieldName = 'modul'
         Visible = True
       end>
+  end
+  object DBNavigator1: TDBNavigator
+    Left = 8
+    Top = 247
+    Width = 256
+    Height = 25
+    DataSource = frmBugtracker.dsModule
+    VisibleButtons = [nbFirst, nbPrior, nbNext, nbLast, nbInsert, nbDelete, nbPost, nbCancel]
+    TabOrder = 1
   end
 end

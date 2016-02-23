@@ -21,7 +21,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, DBXpress, WideStrings, DB, SqlExpr, StdCtrls, ExtCtrls, DBCtrls,
+  Dialogs, WideStrings, DB, SqlExpr, StdCtrls, ExtCtrls, DBCtrls,
   ADODB, ComCtrls, Grids, DBGrids, Mask, Menus, XPMan;
 
 type
@@ -84,6 +84,12 @@ type
     LblAngemeldet: TLabel;
     Label7: TLabel;
     Label8: TLabel;
+    DBLookupComboBox4: TDBLookupComboBox;
+    qryBugserfasser: TIntegerField;
+    qryBugsversion_agenda: TIntegerField;
+    Label9: TLabel;
+    cbxErfasser: TDBLookupComboBox;
+    Label10: TLabel;
     procedure Mitarbeiter1Click(Sender: TObject);
     procedure qryBugsAfterScroll(DataSet: TDataSet);
     procedure Module1Click(Sender: TObject);
@@ -122,7 +128,9 @@ uses Mitarbeiter, Module, Versionen, Projekte, Login, About, inifiles;
 procedure TfrmBugtracker.qryBugsAfterInsert(DataSet: TDataSet);
 begin
   // Standardwerte für einen neuen Bug
-  qryBugs.FieldByName('wichtigkeit').AsInteger := 5;
+  qryBugs.FieldByName('wichtigkeit').AsInteger := 5; // Mitte
+  qryBugs.FieldByName('erstellt').AsDateTime := Now;
+  qryBugs.FieldByName('erfasser').AsInteger := eingeloggtMitarbeiter;
   // qryBugs.FieldByName('bearbeiter').AsInteger := eingeloggtMitarbeiter;
   qryBugs.FieldByName('projekt').AsInteger := aktuellesProjekt;
 end;
@@ -240,6 +248,7 @@ var
 begin
   ini := TMemIniFile.Create('bugtracker.ini');
   try
+    ADOConnection1.Connected := false;
     ADOConnection1.ConnectionString := ini.ReadString('Database', 'ConnectionString', '');
   finally
     ini.Free;
