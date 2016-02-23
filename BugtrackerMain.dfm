@@ -1,6 +1,7 @@
 object frmBugtracker: TfrmBugtracker
   Left = 0
   Top = 0
+  Align = alClient
   Caption = 'ViaThinkSoft Bugtracker f'#252'r Windows'
   ClientHeight = 596
   ClientWidth = 763
@@ -31,7 +32,6 @@ object frmBugtracker: TfrmBugtracker
     Height = 596
     Align = alLeft
     TabOrder = 0
-    ExplicitHeight = 498
     DesignSize = (
       249
       596)
@@ -97,7 +97,6 @@ object frmBugtracker: TfrmBugtracker
       VisibleButtons = [nbFirst, nbPrior, nbNext, nbLast]
       Anchors = [akLeft, akRight, akBottom]
       TabOrder = 2
-      ExplicitTop = 456
     end
   end
   object Panel2: TPanel
@@ -107,8 +106,6 @@ object frmBugtracker: TfrmBugtracker
     Height = 596
     Align = alClient
     TabOrder = 1
-    ExplicitWidth = 499
-    ExplicitHeight = 498
     DesignSize = (
       511
       596)
@@ -208,7 +205,6 @@ object frmBugtracker: TfrmBugtracker
       DataField = 'beschreibung'
       DataSource = dsBugs
       TabOrder = 9
-      ExplicitWidth = 736
     end
     object DBEdit1: TDBEdit
       Left = 15

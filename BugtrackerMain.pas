@@ -15,6 +15,12 @@ unit BugtrackerMain;
  *   ... RTF Feld als BIGTEXT definieren
  * - Neue Aufteilung der States
  *   ... Open, Fixed, Published, Wontfix/Rejected, Planned(Agenda)
+ *
+ * NOT INCLUDED:
+ * - duplicate of
+ *
+ * FUTURE:
+ * - HS Info integration
  *)
 
 interface
