@@ -14,6 +14,7 @@ object frmBugtracker: TfrmBugtracker
   Menu = MainMenu1
   OldCreateOrder = False
   Position = poScreenCenter
+  OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
@@ -195,6 +196,7 @@ object frmBugtracker: TfrmBugtracker
       DataSource = dsBugs
       VisibleButtons = [nbInsert, nbDelete, nbPost, nbCancel]
       TabOrder = 0
+      BeforeAction = DBNavigator1BeforeAction
     end
     object DBRichEdit1: TDBRichEdit
       Left = 15
@@ -403,6 +405,7 @@ object frmBugtracker: TfrmBugtracker
     Connection = ADOConnection1
     CursorType = ctStatic
     AfterInsert = qryBugsAfterInsert
+    BeforeCancel = qryBugsBeforeCancel
     AfterScroll = qryBugsAfterScroll
     Parameters = <>
     SQL.Strings = (

@@ -2,7 +2,6 @@ unit BugtrackerMain;
 
 (*
  * TODO:
- * - abfragen ob speichern wenn fenster geschlossen wird
  * - Spezielle Filter
  *   ... Auflisten nach Modul
  *   ... Anzeigen der Agenda
@@ -113,6 +112,9 @@ type
     procedure qryVersionenAfterInsert(DataSet: TDataSet);
     procedure qryModuleAfterInsert(DataSet: TDataSet);
     procedure btnBearbeitungsnotizClick(Sender: TObject);
+    procedure qryBugsBeforeCancel(DataSet: TDataSet);
+    procedure DBNavigator1BeforeAction(Sender: TObject; Button: TNavigateBtn);
+    procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
   public
     eingeloggtMitarbeiter: integer;
     eingeloggtMitarbeiterName: string;
@@ -152,6 +154,31 @@ begin
   finally
     TrackBar1.OnChange := bakEvent;
   end;
+end;
+
+procedure TfrmBugtracker.qryBugsBeforeCancel(DataSet: TDataSet);
+var
+  abfrage: Integer;
+begin
+  // Tag 1 = Es wurde der "Abbrechen"-Knopf im DBNavigator gedrückt, also wollen wir keine unnötige Bestätigung
+  // Alles andere = Irgendwas anderes (z.B. Scrolling oder versehentlich versucht das Fenster zu schließen)
+  if qryBugs.Tag = 1 then exit;
+
+  abfrage := MessageDlg('Speichern?', mtConfirmation, mbYesNoCancel, 0);
+
+  if (abfrage = IDNo) or (abfrage = IDYes) or (abfrage = IDOK) then
+  begin
+     if abfrage = IDYes then
+     begin
+       if (qryBugs.state in [dsEdit, dsInsert]) then qryBugs.Post;
+     end;
+     if abfrage = IDNo then
+     begin
+       // Wir befinden uns bereits in qryBugs.Cancel, daher auskommentiert.
+       // if (qryBugs.state in [dsEdit, dsInsert]) then qryBugs.Cancel;
+     end;
+  end
+  else raise EAbort.Create('Abbruch durch Benutzer'); // Cancel geklickt
 end;
 
 procedure TfrmBugtracker.qryBugsversion_releaseValidate(Sender: TField);
@@ -246,6 +273,28 @@ begin
       end;
   end;
   qryBugs.Active := true;
+end;
+
+procedure TfrmBugtracker.DBNavigator1BeforeAction(Sender: TObject; Button: TNavigateBtn);
+begin
+  if Button = nbCancel then
+  begin
+    if qryBugs.state  in [dsEdit,dsInsert] then
+    begin
+      // Tag=1 soll verhindern, dass nicht gefragt wird, ob man Speichern möchte.
+      // Ansonsten würde diese Meldung kommen, denn ".Cancel" wird automatisch
+      // bei Ereignissen wie z.B. dem Scrolling aufgerufen (noch bevor
+      // OnBeforeScroll aufgerufen wird), bei dem man einen MBOnCloseQuery wünscht.
+      qryBugs.Tag := 1;
+      qryBugs.Cancel;
+      qryBugs.Tag := 0;
+    end;
+  end;
+end;
+
+procedure TfrmBugtracker.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+begin
+  qryBugs.Cancel;
 end;
 
 procedure TfrmBugtracker.FormCreate(Sender: TObject);
