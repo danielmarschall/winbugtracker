@@ -78,16 +78,15 @@ object frmBugtracker: TfrmBugtracker
       Style = csDropDownList
       Anchors = [akLeft, akTop, akRight]
       ItemHeight = 13
-      ItemIndex = 0
       TabOrder = 1
-      Text = 'Meine offenen Bugs (nach Wichtigkeit)'
       OnChange = ComboBox1Change
       Items.Strings = (
-        'Meine offenen Bugs (nach Wichtigkeit)'
-        'Alle offenen Bugs (nach Wichtigkeit)'
+        'Meine offenen Aufgaben (nach Wichtigkeit)'
+        'Alle offenen Aufgaben (nach Wichtigkeit)'
         'Gel'#246'st ohne Ver'#246'ffentlichung (nach L'#246'sungsdatum)'
         'Gel'#246'st und Ver'#246'ffentlicht (nach Version und L'#246'sungsdatum)'
-        'Alle Bugs (nach Er'#246'ffnungsdatum)')
+        'Von mir erfasste Aufgaben (nach Erfassungsdatum)'
+        'Alle Aufgaben (nach Er'#246'ffnungsdatum)')
     end
     object DBNavigator2: TDBNavigator
       Left = 11

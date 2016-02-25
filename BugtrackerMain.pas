@@ -269,12 +269,12 @@ begin
   case ComboBox1.ItemIndex of
     0:
       begin
-        // Meine offenen Bugs (nach Wichtigkeit)
+        // Meine offenen Aufgaben (nach Wichtigkeit)
         qryBugs.SQL.Text := 'SELECT * FROM bugs WHERE projekt = '+IntToStr(aktuellesProjekt)+' AND (status = 1 OR status = 3) AND bearbeiter = '+IntToStr(eingeloggtMitarbeiter)+' ORDER BY wichtigkeit DESC';
       end;
     1:
       begin
-        // Alle offenen Bugs (nach Wichtigkeit)
+        // Alle offenen Aufgaben (nach Wichtigkeit)
         qryBugs.SQL.Text := 'SELECT * FROM bugs WHERE projekt = '+IntToStr(aktuellesProjekt)+' AND (status = 1 OR status = 3) ORDER BY wichtigkeit DESC';
       end;
     2:
@@ -289,7 +289,12 @@ begin
       end;
     4:
       begin
-        // Alle Bugs (nach Eröffnungsdatum)
+        // Von mir erfasste Aufgaben (nach Erfassungsdatum)
+        qryBugs.SQL.Text := 'SELECT * FROM bugs WHERE projekt = '+IntToStr(aktuellesProjekt)+' AND erfasser = '+IntToStr(eingeloggtMitarbeiter)+' ORDER BY erstellt DESC';
+      end;
+    5:
+      begin
+        // Alle Aufgaben (nach Eröffnungsdatum)
         qryBugs.SQL.Text := 'SELECT * FROM bugs WHERE projekt = '+IntToStr(aktuellesProjekt)+' ORDER BY erstellt DESC';
       end;
   end;
