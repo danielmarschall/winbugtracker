@@ -134,9 +134,11 @@ object frmBugtracker: TfrmBugtracker
     object Label4: TLabel
       Left = 240
       Top = 101
-      Width = 29
+      Width = 31
       Height = 13
-      Caption = 'Gefixt'
+      BiDiMode = bdLeftToRight
+      Caption = 'Status'
+      ParentBiDiMode = False
     end
     object Label5: TLabel
       Left = 16
@@ -147,7 +149,7 @@ object frmBugtracker: TfrmBugtracker
     end
     object Label6: TLabel
       Left = 240
-      Top = 149
+      Top = 216
       Width = 119
       Height = 13
       Caption = 'Ver'#246'ffentlicht als Version'
@@ -176,10 +178,10 @@ object frmBugtracker: TfrmBugtracker
     end
     object Label9: TLabel
       Left = 240
-      Top = 195
-      Width = 96
+      Top = 170
+      Width = 92
       Height = 13
-      Caption = 'Geplant f'#252'r Version:'
+      Caption = 'Geplant f'#252'r Version'
     end
     object Label10: TLabel
       Left = 17
@@ -206,7 +208,7 @@ object frmBugtracker: TfrmBugtracker
       Anchors = [akLeft, akTop, akRight, akBottom]
       DataField = 'beschreibung'
       DataSource = dsBugs
-      TabOrder = 9
+      TabOrder = 10
     end
     object DBEdit1: TDBEdit
       Left = 15
@@ -215,7 +217,7 @@ object frmBugtracker: TfrmBugtracker
       Height = 21
       DataField = 'titel'
       DataSource = dsBugs
-      TabOrder = 5
+      TabOrder = 6
     end
     object DBLookupComboBox1: TDBLookupComboBox
       Left = 16
@@ -240,19 +242,19 @@ object frmBugtracker: TfrmBugtracker
       DataField = 'erstellt'
       DataSource = dsBugs
       ReadOnly = True
-      TabOrder = 2
+      TabOrder = 8
     end
     object DBEdit3: TDBEdit
       Left = 240
-      Top = 120
+      Top = 141
       Width = 155
       Height = 21
       TabStop = False
       Color = clBtnFace
-      DataField = 'fixdatum'
+      DataField = 'status_geaendert'
       DataSource = dsBugs
       ReadOnly = True
-      TabOrder = 4
+      TabOrder = 3
     end
     object DBLookupComboBox2: TDBLookupComboBox
       Left = 15
@@ -265,11 +267,11 @@ object frmBugtracker: TfrmBugtracker
       ListField = 'modul'
       ListSource = dsModule
       NullValueKey = 46
-      TabOrder = 3
+      TabOrder = 4
     end
     object DBLookupComboBox3: TDBLookupComboBox
       Left = 240
-      Top = 168
+      Top = 235
       Width = 155
       Height = 21
       DataField = 'version_release'
@@ -277,7 +279,7 @@ object frmBugtracker: TfrmBugtracker
       KeyField = 'id'
       ListField = 'version'
       ListSource = dsVersionen
-      TabOrder = 6
+      TabOrder = 7
     end
     object TrackBar1: TTrackBar
       Left = 245
@@ -285,17 +287,8 @@ object frmBugtracker: TfrmBugtracker
       Width = 164
       Height = 45
       Position = 5
-      TabOrder = 10
+      TabOrder = 11
       OnChange = TrackBar1Change
-    end
-    object btnFixedToggle: TButton
-      Left = 401
-      Top = 118
-      Width = 72
-      Height = 25
-      Caption = 'Umschalten'
-      TabOrder = 8
-      OnClick = btnFixedToggleClick
     end
     object btnBearbeitungsnotiz: TButton
       Left = 17
@@ -303,12 +296,12 @@ object frmBugtracker: TfrmBugtracker
       Width = 185
       Height = 25
       Caption = 'Notiz hinzuf'#252'gen'
-      TabOrder = 7
+      TabOrder = 9
       OnClick = btnBearbeitungsnotizClick
     end
     object DBLookupComboBox4: TDBLookupComboBox
       Left = 240
-      Top = 208
+      Top = 189
       Width = 155
       Height = 21
       DataField = 'version_agenda'
@@ -316,7 +309,7 @@ object frmBugtracker: TfrmBugtracker
       KeyField = 'id'
       ListField = 'version'
       ListSource = dsVersionen
-      TabOrder = 11
+      TabOrder = 5
     end
     object cbxErfasser: TDBLookupComboBox
       Left = 17
@@ -333,14 +326,25 @@ object frmBugtracker: TfrmBugtracker
       ReadOnly = True
       TabOrder = 12
     end
+    object DBLookupComboBox5: TDBLookupComboBox
+      Left = 240
+      Top = 120
+      Width = 155
+      Height = 21
+      DataField = 'status'
+      DataSource = dsBugs
+      KeyField = 'id'
+      ListField = 'status'
+      ListSource = dsStatus
+      TabOrder = 2
+    end
   end
   object ADOConnection1: TADOConnection
     Connected = True
     ConnectionString = 
-      'Provider=SQLOLEDB.1;Integrated Security=SSPI;Persist Security In' +
-      'fo=False;Initial Catalog=WULI;Data Source=GREINER\CORA2012,49001'
+      'Provider=MSDASQL.1;Persist Security Info=False;Data Source=MySQL' +
+      ' RAS;Initial Catalog=bugtracker;'
     LoginPrompt = False
-    Provider = 'SQLOLEDB.1'
     Left = 104
     Top = 344
   end
@@ -433,9 +437,6 @@ object frmBugtracker: TfrmBugtracker
     object qryBugsbearbeiter: TIntegerField
       FieldName = 'bearbeiter'
     end
-    object qryBugsfixdatum: TDateTimeField
-      FieldName = 'fixdatum'
-    end
     object qryBugsversion_release: TIntegerField
       FieldName = 'version_release'
       OnValidate = qryBugsversion_releaseValidate
@@ -451,6 +452,13 @@ object frmBugtracker: TfrmBugtracker
     end
     object qryBugsversion_agenda: TIntegerField
       FieldName = 'version_agenda'
+    end
+    object qryBugsstatus: TIntegerField
+      FieldName = 'status'
+      OnChange = qryBugsstatusChange
+    end
+    object qryBugsstatus_geaendert: TDateTimeField
+      FieldName = 'status_geaendert'
     end
   end
   object dsVersionen: TDataSource
@@ -502,5 +510,18 @@ object frmBugtracker: TfrmBugtracker
       'SELECT * FROM module')
     Left = 304
     Top = 344
+  end
+  object lkpStatus: TADOTable
+    Active = True
+    Connection = ADOConnection1
+    CursorType = ctStatic
+    TableName = 'lkp_status'
+    Left = 344
+    Top = 344
+  end
+  object dsStatus: TDataSource
+    DataSet = lkpStatus
+    Left = 344
+    Top = 312
   end
 end

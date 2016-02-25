@@ -5,15 +5,8 @@ unit BugtrackerMain;
  * - Spezielle Filter
  *   ... Auflisten nach Modul
  *   ... Anzeigen der Agenda
- * - verbinden mit ticketsystem von HS
- * - rtf controls?
- * - Neue Felder:
- *   ... Erfasser
- *   ... Agenda
- *   ... Status = Offen, gefixt, Abgelehnt, Veröffentlicht
- *   ... RTF Feld als BIGTEXT definieren
- * - Neue Aufteilung der States
- *   ... Open, Fixed, Published, Wontfix/Rejected, Planned(Agenda)
+ * - rtf control bar?
+ * - ein neu angelegter bug soll links aus der leiste verschwinden, wenn er nicht in das kriterium passt
  *
  * NOT INCLUDED:
  * - duplicate of
@@ -72,7 +65,6 @@ type
     Splitter1: TSplitter;
     Hilfe1: TMenuItem;
     ber1: TMenuItem;
-    btnFixedToggle: TButton;
     btnBearbeitungsnotiz: TButton;
     qryBugsid: TAutoIncField;
     qryBugstitel: TStringField;
@@ -80,7 +72,6 @@ type
     qryBugserstellt: TDateTimeField;
     qryBugswichtigkeit: TIntegerField;
     qryBugsbearbeiter: TIntegerField;
-    qryBugsfixdatum: TDateTimeField;
     qryBugsversion_release: TIntegerField;
     qryBugsmodul: TIntegerField;
     qryBugsprojekt: TIntegerField;
@@ -95,6 +86,11 @@ type
     Label9: TLabel;
     cbxErfasser: TDBLookupComboBox;
     Label10: TLabel;
+    lkpStatus: TADOTable;
+    dsStatus: TDataSource;
+    DBLookupComboBox5: TDBLookupComboBox;
+    qryBugsstatus: TIntegerField;
+    qryBugsstatus_geaendert: TDateTimeField;
     procedure Mitarbeiter1Click(Sender: TObject);
     procedure qryBugsAfterScroll(DataSet: TDataSet);
     procedure Module1Click(Sender: TObject);
@@ -106,7 +102,6 @@ type
     procedure Projektwechseln1Click(Sender: TObject);
     procedure qryBugsAfterInsert(DataSet: TDataSet);
     procedure ber1Click(Sender: TObject);
-    procedure btnFixedToggleClick(Sender: TObject);
     procedure qryBugsversion_releaseValidate(Sender: TField);
     procedure FormCreate(Sender: TObject);
     procedure qryVersionenAfterInsert(DataSet: TDataSet);
@@ -115,6 +110,7 @@ type
     procedure qryBugsBeforeCancel(DataSet: TDataSet);
     procedure DBNavigator1BeforeAction(Sender: TObject; Button: TNavigateBtn);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+    procedure qryBugsstatusChange(Sender: TField);
   public
     eingeloggtMitarbeiter: integer;
     eingeloggtMitarbeiterName: string;
@@ -139,8 +135,8 @@ begin
   qryBugs.FieldByName('wichtigkeit').AsInteger := 5; // Mitte
   qryBugs.FieldByName('erstellt').AsDateTime := Now;
   qryBugs.FieldByName('erfasser').AsInteger := eingeloggtMitarbeiter;
-  // qryBugs.FieldByName('bearbeiter').AsInteger := eingeloggtMitarbeiter;
   qryBugs.FieldByName('projekt').AsInteger := aktuellesProjekt;
+  qryBugs.FieldByName('status').AsInteger := 1; // Offen
 end;
 
 procedure TfrmBugtracker.qryBugsAfterScroll(DataSet: TDataSet);
@@ -181,11 +177,31 @@ begin
   else raise EAbort.Create('Abbruch durch Benutzer'); // Cancel geklickt
 end;
 
+procedure TfrmBugtracker.qryBugsstatusChange(Sender: TField);
+var
+  col: TColor;
+begin
+  qryBugsstatus_geaendert.AsDateTime := Now;
+
+  DBLookupComboBox5.KeyValue := qryBugsstatus.AsVariant; // nur benötigt, daamit wir auf DBLookupComboBox5.Text zugreifen können
+  case qryBugsstatus.AsInteger of
+    1: col := clRed; // Offen
+    2: col := clMaroon; // Abgelehnt
+    3: col := clPurple; // In Bearbeitung
+    4: col := clTeal; // Gefixt
+    5: col := clGreen; // Veröffentlicht
+    else
+      col := clBlack; // sollte nicht passieren
+  end;
+  NotizHinzufuegen(col, DBLookupComboBox5.Text);
+end;
+
 procedure TfrmBugtracker.qryBugsversion_releaseValidate(Sender: TField);
 begin
-  if qryBugs.FieldByName('fixdatum').IsNull then
+  if qryBugs.FieldByName('status').AsInteger <> 5 then
   begin
-    raise Exception.Create('Vor einer Veröffentlichung muss der Bugfix erst als gefixt markiert werden.');
+    // raise Exception.Create('Vor einer Veröffentlichung muss der Bugfix erst als "Veröffentlicht" markiert werden.');
+    qryBugs.FieldByName('status').AsInteger := 5;
   end;
 end;
 
@@ -225,22 +241,7 @@ end;
 
 procedure TfrmBugtracker.btnBearbeitungsnotizClick(Sender: TObject);
 begin
-  NotizHinzufuegen(clRed, 'Notiz');
-end;
-
-procedure TfrmBugtracker.btnFixedToggleClick(Sender: TObject);
-begin
-  if not (qryBugs.State in [dsEdit, dsInsert]) then qryBugs.Edit;
-  if qryBugs.FieldByName('fixdatum').IsNull then
-  begin
-    qryBugs.FieldByName('fixdatum').AsDateTime := Now;
-    NotizHinzufuegen(clGreen, 'Gefixt');
-  end
-  else
-  begin
-    qryBugs.FieldByName('fixdatum').Clear;
-    NotizHinzufuegen(clBlue, 'Neu eröffnet');
-  end;
+  NotizHinzufuegen(clOlive, 'Notiz');
 end;
 
 procedure TfrmBugtracker.ComboBox1Change(Sender: TObject);
@@ -249,22 +250,22 @@ begin
     0:
       begin
         // Meine offenen Bugs (nach Wichtigkeit)
-        qryBugs.SQL.Text := 'SELECT * FROM bugs WHERE projekt = '+IntToStr(aktuellesProjekt)+' AND fixdatum IS NULL AND bearbeiter = '+IntToStr(eingeloggtMitarbeiter)+' ORDER BY wichtigkeit DESC';
+        qryBugs.SQL.Text := 'SELECT * FROM bugs WHERE projekt = '+IntToStr(aktuellesProjekt)+' AND (status = 1 OR status = 3) AND bearbeiter = '+IntToStr(eingeloggtMitarbeiter)+' ORDER BY wichtigkeit DESC';
       end;
     1:
       begin
         // Alle offenen Bugs (nach Wichtigkeit)
-        qryBugs.SQL.Text := 'SELECT * FROM bugs WHERE projekt = '+IntToStr(aktuellesProjekt)+' AND fixdatum IS NULL ORDER BY wichtigkeit DESC';
+        qryBugs.SQL.Text := 'SELECT * FROM bugs WHERE projekt = '+IntToStr(aktuellesProjekt)+' AND (status = 1 OR status = 3) ORDER BY wichtigkeit DESC';
       end;
     2:
       begin
         // Gelöst ohne Veröffentlichung (nach Lösungsdatum)
-        qryBugs.SQL.Text := 'SELECT * FROM bugs WHERE projekt = '+IntToStr(aktuellesProjekt)+' AND fixdatum IS NOT NULL ORDER BY fixdatum DESC';
+        qryBugs.SQL.Text := 'SELECT * FROM bugs WHERE projekt = '+IntToStr(aktuellesProjekt)+' AND status = 4 ORDER BY status_geaendert DESC';
       end;
     3:
       begin
         // Gelöst und Veröffentlicht (nach Version und Lösungsdatum)
-        qryBugs.SQL.Text := 'SELECT * FROM bugs WHERE projekt = '+IntToStr(aktuellesProjekt)+' AND fixdatum IS NOT NULL ORDER BY version_release DESC, fixdatum DESC';
+        qryBugs.SQL.Text := 'SELECT * FROM bugs WHERE projekt = '+IntToStr(aktuellesProjekt)+' AND status = 5 ORDER BY status_geaendert DESC';
       end;
     4:
       begin
@@ -315,6 +316,7 @@ begin
   qryVersionen.Active := true;
   tblProjekte.Active := true;
   qryModule.Active := true;
+  lkpStatus.Active := true;
 end;
 
 procedure TfrmBugtracker.Mitarbeiter1Click(Sender: TObject);
@@ -347,13 +349,20 @@ begin
   if not (qryBugs.State in [dsEdit, dsInsert]) then qryBugs.Edit;
 
   // Endet der Text mit zwei Zeilenabständen? Wenn nein, dann einfügen.
-  leerzeilen := 0;
-  if Copy(DBRichEdit1.Text, 1+Length(DBRichEdit1.Text)-2, 2) = #13#10 then Inc(leerzeilen); // letzte Zeile
-  if Copy(DBRichEdit1.Text, 1+Length(DBRichEdit1.Text)-4, 2) = #13#10 then Inc(leerzeilen); // Vorletzte Zeile
-  case leerzeilen of
-    0: umbruch := #13#10#13#10;
-    1: umbruch := #13#10;
-    2: umbruch := '';
+  if Trim(DBRichEdit1.Text) <> '' then
+  begin
+    leerzeilen := 0;
+    if Copy(DBRichEdit1.Text, 1+Length(DBRichEdit1.Text)-2, 2) = #13#10 then Inc(leerzeilen); // letzte Zeile
+    if Copy(DBRichEdit1.Text, 1+Length(DBRichEdit1.Text)-4, 2) = #13#10 then Inc(leerzeilen); // Vorletzte Zeile
+    case leerzeilen of
+      0: umbruch := #13#10#13#10;
+      1: umbruch := #13#10;
+      2: umbruch := '';
+    end;
+  end
+  else
+  begin
+    umbruch := '';
   end;
 
   DBRichEdit1.SelStart := DBRichEdit1.GetTextLen;
