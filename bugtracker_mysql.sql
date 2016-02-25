@@ -70,8 +70,9 @@ CREATE TABLE IF NOT EXISTS `versionen` (
 --
 
 CREATE TABLE IF NOT EXISTS `lkp_status` (
-`id` int(11) NOT NULL,
-  `status` varchar(255) NOT NULL
+  `id` int(11) NOT NULL,
+  `status` varchar(255) NOT NULL,
+  `color` int(11) NOT NULL
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
 
 --
@@ -123,8 +124,8 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 
 INSERT INTO `lkp_status` (`id`, `status`) VALUES
-(1, 'Offen'),
-(2, 'Abgelehnt'),
-(3, 'In Arbeit'),
-(4, 'Abgeschlossen'),
-(5, 'Veröffentlicht');
+(1, 'Offen', 255),
+(2, 'Abgelehnt', 128),
+(3, 'In Arbeit', 8388736),
+(4, 'Abgeschlossen', 8421376),
+(5, 'Veröffentlicht', 32768);

@@ -93,6 +93,9 @@ type
     qryBugsstatus_geaendert: TDateTimeField;
     Bugs1: TMenuItem;
     Wechselnzu1: TMenuItem;
+    lkpStatusid: TAutoIncField;
+    lkpStatusstatus: TStringField;
+    lkpStatuscolor: TIntegerField;
     procedure Mitarbeiter1Click(Sender: TObject);
     procedure qryBugsAfterScroll(DataSet: TDataSet);
     procedure Module1Click(Sender: TObject);
@@ -187,16 +190,7 @@ begin
   qryBugsstatus_geaendert.AsDateTime := Now;
 
   DBLookupComboBox5.KeyValue := qryBugsstatus.AsVariant; // nur benötigt, daamit wir auf DBLookupComboBox5.Text zugreifen können
-  case qryBugsstatus.AsInteger of
-    // TODO: farben in db?
-    1: col := clRed; // Offen
-    2: col := clMaroon; // Abgelehnt
-    3: col := clPurple; // In Bearbeitung
-    4: col := clTeal; // Gefixt
-    5: col := clGreen; // Veröffentlicht
-    else
-      col := clBlack; // sollte nicht passieren
-  end;
+  col := TColor(lkpStatuscolor.AsInteger);
   NotizHinzufuegen(col, DBLookupComboBox5.Text);
 end;
 

@@ -41,11 +41,13 @@ CREATE TABLE [dbo].[versionen](
 
 CREATE TABLE [dbo].[lkp_status](
 	[id] [int] IDENTITY(1,1) NOT NULL,
-	[status] [varchar](255) NULL
+	[status] [varchar](255) NULL,
+	[color] [int] NOT NULL
 ) ON [PRIMARY]
+ALTER TABLE [dbo].[lkp_status] ADD  CONSTRAINT [DF_lkp_status_color]  DEFAULT ((0))
 
-INSERT INTO [lkp_status] ([status]) VALUES ('Offen');
-INSERT INTO [lkp_status] ([status]) VALUES ('Abgelehnt');
-INSERT INTO [lkp_status] ([status]) VALUES ('In Arbeit');
-INSERT INTO [lkp_status] ([status]) VALUES ('Abgeschlossen');
-INSERT INTO [lkp_status] ([status]) VALUES ('Veröffentlicht');
+INSERT INTO [lkp_status] ([status]) VALUES ('Offen', 255);
+INSERT INTO [lkp_status] ([status]) VALUES ('Abgelehnt', 128);
+INSERT INTO [lkp_status] ([status]) VALUES ('In Arbeit', 8388736);
+INSERT INTO [lkp_status] ([status]) VALUES ('Abgeschlossen', 8421376);
+INSERT INTO [lkp_status] ([status]) VALUES ('Veröffentlicht', 32768);

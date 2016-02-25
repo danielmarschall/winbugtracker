@@ -110,14 +110,14 @@ object frmBugtracker: TfrmBugtracker
       511
       596)
     object Label1: TLabel
-      Left = 16
+      Left = 17
       Top = 101
       Width = 50
       Height = 13
       Caption = 'Bearbeiter'
     end
     object Label2: TLabel
-      Left = 15
+      Left = 17
       Top = 195
       Width = 20
       Height = 13
@@ -140,8 +140,8 @@ object frmBugtracker: TfrmBugtracker
       ParentBiDiMode = False
     end
     object Label5: TLabel
-      Left = 16
-      Top = 149
+      Left = 17
+      Top = 147
       Width = 28
       Height = 13
       Caption = 'Modul'
@@ -191,8 +191,8 @@ object frmBugtracker: TfrmBugtracker
     end
     object DBNavigator1: TDBNavigator
       Left = 15
-      Top = 16
-      Width = 224
+      Top = 19
+      Width = 184
       Height = 25
       DataSource = dsBugs
       VisibleButtons = [nbInsert, nbDelete, nbPost, nbCancel]
@@ -210,8 +210,8 @@ object frmBugtracker: TfrmBugtracker
       TabOrder = 10
     end
     object DBEdit1: TDBEdit
-      Left = 15
-      Top = 208
+      Left = 17
+      Top = 213
       Width = 186
       Height = 21
       DataField = 'titel'
@@ -219,7 +219,7 @@ object frmBugtracker: TfrmBugtracker
       TabOrder = 6
     end
     object DBLookupComboBox1: TDBLookupComboBox
-      Left = 16
+      Left = 17
       Top = 120
       Width = 186
       Height = 21
@@ -256,7 +256,7 @@ object frmBugtracker: TfrmBugtracker
       TabOrder = 3
     end
     object DBLookupComboBox2: TDBLookupComboBox
-      Left = 15
+      Left = 17
       Top = 168
       Width = 186
       Height = 21
@@ -525,6 +525,17 @@ object frmBugtracker: TfrmBugtracker
     TableName = 'lkp_status'
     Left = 344
     Top = 344
+    object lkpStatusid: TAutoIncField
+      FieldName = 'id'
+      ReadOnly = True
+    end
+    object lkpStatusstatus: TStringField
+      FieldName = 'status'
+      Size = 255
+    end
+    object lkpStatuscolor: TIntegerField
+      FieldName = 'color'
+    end
   end
   object dsStatus: TDataSource
     DataSet = lkpStatus
