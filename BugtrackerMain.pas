@@ -91,6 +91,8 @@ type
     DBLookupComboBox5: TDBLookupComboBox;
     qryBugsstatus: TIntegerField;
     qryBugsstatus_geaendert: TDateTimeField;
+    Bugs1: TMenuItem;
+    Wechselnzu1: TMenuItem;
     procedure Mitarbeiter1Click(Sender: TObject);
     procedure qryBugsAfterScroll(DataSet: TDataSet);
     procedure Module1Click(Sender: TObject);
@@ -111,6 +113,7 @@ type
     procedure DBNavigator1BeforeAction(Sender: TObject; Button: TNavigateBtn);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure qryBugsstatusChange(Sender: TField);
+    procedure Wechselnzu1Click(Sender: TObject);
   public
     eingeloggtMitarbeiter: integer;
     eingeloggtMitarbeiterName: string;
@@ -185,6 +188,7 @@ begin
 
   DBLookupComboBox5.KeyValue := qryBugsstatus.AsVariant; // nur benötigt, daamit wir auf DBLookupComboBox5.Text zugreifen können
   case qryBugsstatus.AsInteger of
+    // TODO: farben in db?
     1: col := clRed; // Offen
     2: col := clMaroon; // Abgelehnt
     3: col := clPurple; // In Bearbeitung
@@ -232,6 +236,22 @@ end;
 procedure TfrmBugtracker.Versionen1Click(Sender: TObject);
 begin
   frmVersionen.ShowModal;
+end;
+
+procedure TfrmBugtracker.Wechselnzu1Click(Sender: TObject);
+var
+  s: string;
+  id, ec: integer;
+begin
+  s := Trim(InputBox('Wechseln zu Bug', 'ID des Bugs eingeben', '0'));
+  if s = '' then exit;  
+  Val(s, id, ec);
+  if ec <> 0 then
+  begin
+    ShowMessageFmt('"%s" ist keine gültige Bug-ID-Nummer.', [id]);
+    exit;
+  end;
+  qryBugs.Locate('id', id, []);
 end;
 
 procedure TfrmBugtracker.ber1Click(Sender: TObject);

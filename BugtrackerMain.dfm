@@ -342,9 +342,10 @@ object frmBugtracker: TfrmBugtracker
   object ADOConnection1: TADOConnection
     Connected = True
     ConnectionString = 
-      'Provider=MSDASQL.1;Persist Security Info=False;Data Source=MySQL' +
-      ' RAS;Initial Catalog=bugtracker;'
+      'Provider=SQLOLEDB.1;Integrated Security=SSPI;Persist Security In' +
+      'fo=False;Initial Catalog=WULI;Data Source=GREINER\CORA2012,49001'
     LoginPrompt = False
+    Provider = 'SQLOLEDB.1'
     Left = 104
     Top = 344
   end
@@ -386,6 +387,13 @@ object frmBugtracker: TfrmBugtracker
       object Versionen1: TMenuItem
         Caption = 'Versionen'
         OnClick = Versionen1Click
+      end
+    end
+    object Bugs1: TMenuItem
+      Caption = 'Bugs'
+      object Wechselnzu1: TMenuItem
+        Caption = 'Wechseln zu...'
+        OnClick = Wechselnzu1Click
       end
     end
     object Projektwechseln1: TMenuItem

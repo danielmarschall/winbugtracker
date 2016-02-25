@@ -43,3 +43,9 @@ CREATE TABLE [dbo].[lkp_status](
 	[id] [int] IDENTITY(1,1) NOT NULL,
 	[status] [varchar](255) NULL
 ) ON [PRIMARY]
+
+INSERT INTO [lkp_status] ([status]) VALUES ('Offen');
+INSERT INTO [lkp_status] ([status]) VALUES ('Abgelehnt');
+INSERT INTO [lkp_status] ([status]) VALUES ('In Arbeit');
+INSERT INTO [lkp_status] ([status]) VALUES ('Abgeschlossen');
+INSERT INTO [lkp_status] ([status]) VALUES ('Veröffentlicht');
