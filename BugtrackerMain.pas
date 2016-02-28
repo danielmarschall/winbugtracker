@@ -306,8 +306,11 @@ begin
       // bei Ereignissen wie z.B. dem Scrolling aufgerufen (noch bevor
       // OnBeforeScroll aufgerufen wird), bei dem man einen MBOnCloseQuery wünscht.
       qryBugs.Tag := 1;
-      qryBugs.Cancel;
-      qryBugs.Tag := 0;
+      try
+        qryBugs.Cancel;
+      finally
+        qryBugs.Tag := 0;
+      end;
     end;
   end;
 end;
